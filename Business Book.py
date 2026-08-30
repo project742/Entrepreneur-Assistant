@@ -3,7 +3,7 @@ from tabulate import tabulate
 x = mysql.connector.connect(host="localhost",user="root",password="root",database="arun")
 cur = x.cursor()
 #book
-cur.execute("select B_ID, B_Name from business_ideas")
+"""cur.execute("select B_ID, B_Name from business_ideas")
 data = cur.fetchall()
 i = 0
 page=1
@@ -39,7 +39,7 @@ x.close()
 
 
 #searching business
-"""cur.execute("select * from business_ideas")
+cur.execute("select * from business_ideas")
 data=cur.fetchall()
 ids = []
 ans = "y"
@@ -58,7 +58,43 @@ for i in data:
         else:
             print("Business ID not found")
         ans=input("Press y to search more:")
-"""   
+   
+#browse by department
+ans="y"
+departments=[]
+cur.execute("select distinct Dept from business_ideas")
+data=cur.fetchall()
+for i in data:
+    for j in i:
+        departments.append(j.lower())
+print(departments)
+while ans.lower() == "y":
+    dept=input("Enter the department you want:")
+    if dept.lower() in departments:
+        cur.execute("select * from business_ideas natural join business_ideas1 where dept = '%s' "%dept)
+        data=cur.fetchall()
+        print(tabulate(data,headers=["B_ID","B_Name",
+        "Department","Cost LM","Cost UP","Skills","License","Demand","Risk"],tablefmt="psql"))
+    else:
+        print("Invalid Department")
+    ans=input("Do you want to continue more? press(y):")
+
+
+#browse by investment
+ans="y"
+while ans == "y":
+    amount=int(input("Enter the investment amount:"))
+    cur.execute("select * from business_ideas where cost_lm < %s" % amount)
+    data=cur.fetchall()
+    if len(data) > 0:
+        for row in data:
+            print(row[0] + ":" + row[1])
+            print("Department:" + row[2])
+            print("Cost:" + str(row[3]) + "\n\n")
+    else:
+        print("Sorry,We dont have business according to your investment")
+    ans=input("Do you want to continue more? press(y):")
+"""
 
 
 
