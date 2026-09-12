@@ -3,13 +3,6 @@ from tabulate import tabulate
 x = mysql.connector.connect(host="localhost",user="root",password="root",database="arun")
 cur = x.cursor()
 #book
-print("Viewing Business...")
-print("Press 1 ----> Business Book")
-print("Press 2 ----> View by Investment")
-print("Press 3 ----> View by Department")
-print("Press 4 ----> Search Business")
-print("Press 5 ----> Suggest Business")
-choice=input("
 """cur.execute("select B_ID, B_Name from business_ideas")
 data = cur.fetchall()
 i = 0
