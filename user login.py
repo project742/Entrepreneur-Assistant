@@ -3,6 +3,19 @@ from tabulate import tabulate
 x = mysql.connector.connect(host="localhost",user="root",password="root",database="arun")
 cur = x.cursor()
 
+def input_phone():
+   while True:
+       phone = input("Enter Phone Number: ")
+       if len(phone) == 10:
+            pass
+       else:
+            print("Invalid phone number. Enter exactly 10 digits.")
+            continue
+       if phone.isdigit():
+            return phone
+       else:
+            print("Invalid phone number. Enter only digits.")
+            
 while True:
     print("Press 1 ----> Login")
     print("Press 2 ----> Signup")
@@ -16,9 +29,8 @@ while True:
                 continue
             break
         password = input("Enter the Password:")
-        phone = input("Enter the Phone Number:")
         cur.execute("Insert into user_ids  (user_name,password,phone) values ('%s','%s','%s')"%
-        (username,password,phone))
+        (username,password,input_phone()))
         x.commit()
         print("Account Created Successfully")
     elif choice == "2":
