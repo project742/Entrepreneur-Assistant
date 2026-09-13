@@ -24,3 +24,14 @@ CREATE TABLE business_details (
 );
 B001 | Full Time | Cooking, Marketing | Families | Home | 1-2 People | Product
 
++-----------+----------+-----------+----------+
+| user_name | password | phone     | attempts |
++-----------+----------+-----------+----------+
+| Arun      | 000      | NULL      | Unlocked |
+| Vaish     | 111      | NULL      | Unlocked |
+| Manish    | 8989     | NULL      | Unlocked |
+| Shailesh  | 6767     | NULL      | Unlocked |
+| dwe       | edew     | edw       | Unlocked |
+| Aswanth   | ewd      | edwed     | Unlocked |
+| Baish     | 121223   | 123123213 | Unlocked |
++-----------+----------+-----------+----------+
