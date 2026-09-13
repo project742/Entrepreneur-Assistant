@@ -19,6 +19,7 @@ def input_phone():
 while True:
     print("Press 1 ----> Login")
     print("Press 2 ----> Signup")
+    print("Press 3 ----> Back")
     choice = input("Enter the choice:").lower()
     if choice == "1":
         while True:
@@ -74,7 +75,8 @@ while True:
                         break
             if escape:
                 break
-                    
+    elif choice == "3":
+       break
     else:
         print("Inavlid Input")
         continue
