@@ -2,6 +2,13 @@ import mysql.connector
 from tabulate import tabulate
 x = mysql.connector.connect(host="localhost",user="root",password="root",database="arun")
 cur = x.cursor()
+
+departments=[]
+        cur.execute("Select distinct Dept from business_ideas")
+        data=cur.fetchall()
+        for i in data:
+            for j in i:
+                departments.append(j.lower())
 while True:
     print("Press 1 ----> Business Book")
     print("Press 2 ----> Searching Business")
@@ -14,12 +21,12 @@ while True:
         cur.execute("select B_ID, B_Name from business_ideas")
         data = cur.fetchall()
         i = 0
-        page=1
+        page = 1
         while True:
             print("\n"+"======================================== BUSINESS BOOK ==============================================\n")
             for j in range(10):
                 if i + j < len(data):
-                    print("\t\t\t\t\t",data[i + j][0], "-", data[i + j][1])
+                    print("\t\t\t\t\t",data[i + j][0],"-",data[i + j][1])
             print("\n[P] Previous Page")
             print("[N] Next Page")
             print("[E] Exit")
@@ -44,54 +51,43 @@ while True:
                 print("Invalid Input")
 
     elif choice == "2":
-        cur.execute("select * from business_ideas")
-        data=cur.fetchall()
-        ids = []
-        for i in data:
-            ids.append(i[0])
             Id=input("Enter the Business ID (as per mentioned in Business Book) :")
-            if Id in ids:
-                print("Searching Record...")
-                cur.execute("select * from business_ideas where B_ID = '%s'"%Id)
-                record = cur.fetchone()
-                print(record[0] + "-" + record[1])
-                print("Description : " + record[2])
-                print("Risk : " + record[4])
-                print("Demand : " + record[5])
-            else:
-                print("Business ID not found")
+            
+            cur.execute("Select * from business_ideas where B_ID = '%s'"%Id)
+            data=cur.fetchall()
+            
+            print("Searching Business...")
+            if len(data) != 1:
+                print("Business Not Found,Enter a valid business ID")
+                continue
+    
+            print("------" + data[1] + "------")
+            print("Startup cost :" + data[4] + "Lakh-" + data[5] + "Lakh")
+            print("Skills Required :" + data[3])
+            print("Demand : " + data[-3])
+            print("Risk : " + data[-2])
+            print("License : " + data[-1])
+            
     elif choice == "3":
-        cur.execute("select * from business_ideas")
-        data=cur.fetchall()
-        ids = []
-        for i in data:
-            ids.append(i[0])
-            Id=input("Enter the Business ID (as per mentioned in Business Book) :")
-            if Id in ids:
-                print("Searching Record...")
-                cur.execute("select * from business_ideas where B_ID = '%s'"%Id)
-                record = cur.fetchone()
-                print(record[0] + "-" + record[1])
-                print("Description : " + record[2])
-                print("Risk : " + record[4])
-                print("Demand : " + record[5])
-            else:
-                print("Business ID not found")
-                
+        print("Enter the Startup budget in lakhs")
+        print("For Example : 50000 as 0.5 lakhs)
+        amount=input("Enter the Startup amount(in lakhs):")
+        print("Searching Record...")
+        cur.execute("""Select B_Name,Skills,Cost_LM,Cost_UP,Demand,Risk,License from 
+        business_ideas where Cost_LM <='%s' """%(amount[:3],))
+        data = cur.fetchall()
+        print(tabulate(data,headers=["B_Name","Skills Required","Startup Cost(From)",
+        "Startup Cost(To)","Skills","Demand","Risk","License"],tablefmt="psql"))
+        
     elif choice == "4":
-        departments=[]
-        cur.execute("select distinct Dept from business_ideas")
-        data=cur.fetchall()
-        for i in data:
-            for j in i:
-                departments.append(j.lower())
         print(departments)
         dept=input("Enter the department you want:")
         if dept.lower() in departments:
-            cur.execute("select * from business_ideas natural join business_ideas1 where dept = '%s' "%dept)
+            cur.execute("""Select B_Name,Skills,Cost_LM,Cost_UP,Demand,Risk,License from
+            business_ideas where dept = '%s'"""%(dept,))
             data=cur.fetchall()
-            print(tabulate(data,headers=["B_ID","B_Name",
-            "Department","Cost LM","Cost UP","Skills","License","Demand","Risk"],tablefmt="psql"))
+            print(tabulate(data,headers=["B_Name","Skills Required","Startup Cost(From)",
+            "Startup Cost(To)","Skills","Demand","Risk","License"],tablefmt="psql"))
         else:
             print("Invalid Department")
                 
