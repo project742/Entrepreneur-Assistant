@@ -4,24 +4,39 @@ CREATE TABLE business_ideas (
     B_ID VARCHAR(10) PRIMARY KEY,
     B_NAME VARCHAR(50),
     DEPT VARCHAR(30),
+    SKILLS VARCHAR(100),
     COST_LM DECIMAL(10,2),
     COST_UP DECIMAL(10,2),
     DEMAND VARCHAR(15),
     RISK VARCHAR(15),
     LICENSE VARCHAR(50)
 );
+
+DEPT: Food, Technology, Construction, Agriculture, Fashion, Entertainment, Education, Healthcare, Tourism, Fitness
+COST_LM: 1, 2, 3, 5, 10, 15, 25...
+COST_UP: 2, 5, 10, 15, 25, 50, 100
+DEMAND: Low, Medium, High
+RISK: Low, Medium, High
+
 B001 | Home Bakery | Food | 1 | 5 | High | Low | FSSAI
 
 CREATE TABLE business_details (
     B_ID VARCHAR(10) PRIMARY KEY,
     TIME_REQ VARCHAR(20),
-    SKILLS VARCHAR(100),
     CUSTOMERS VARCHAR(50),
     LOCATION VARCHAR(30),
     TEAM_SIZE VARCHAR(30),
     MODEL VARCHAR(30),
     FOREIGN KEY (B_ID) REFERENCES business_ideas(B_ID)
 );
+
+TIME_REQ: Part Time, Full Time
+SKILLS: Cooking, Computer, Manufacturing, Marketing, Management, Creative, Agriculture, No Specific Skill
+CUSTOMERS: Local Customers, Students, Families, Businesses, Online Customers, Anyone
+LOCATION: Home, Shop, Factory, Online, Any Location
+TEAM_SIZE: Alone, 1-2 People, Small Team, Large Team
+MODEL: Selling Products, Providing Services, Making Products, Operating Online, No Preference
+
 B001 | Full Time | Cooking, Marketing | Families | Home | 1-2 People | Product
 
 +-----------+----------+-----------+----------+
