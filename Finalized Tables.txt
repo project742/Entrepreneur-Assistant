@@ -128,3 +128,11 @@ VALUES
 ('B048','Full Time','Designing','Businesses','Shop','1-2 People','Providing Services'),
 ('B049','Part Time','Designing','Businesses','Shop','1-2 People','Selling Products'),
 ('B050','Full Time','Printing','Businesses','Shop','Small Team','Selling Products');
+
+admin_details;
+CREATE TABLE admin_details (email VARCHAR(39));
+INSERT INTO admin_details (email) VALUES ('idnetflix135@gmail.com');
+
+user_ids;
+CREATE TABLE user_ids (u_id VARCHAR(10),user_name VARCHAR(50),password VARCHAR(50),Status VARCHAR(8) DEFAULT 'unlocked',email VARCHAR(39));
+INSERT INTO user_ids(u_id, user_name, password, Status, email)VALUES('U001','Arun','000','Unlocked','arun001@gmail.com'),('U002','Vaish','111','Unlocked','vaish002@gmail.com'),('U003','Balaji','1234567','Unlocked','balaji003@gmail.com'),('U004','sadas','sads','Unlocked','sadas004@gmail.com'),('U005','wewqe','sdd','Unlocked','wewqe005@gmail.com'),('U006','wef','ewwe','Unlocked','wef006@gmail.com'),('U007','dfwe','ewf','Unlocked','dfwe007@gmail.com'),('U008','ewfewf','ewefw','Unlocked','ewfewf008@gmail.com'),('U009','efwef','efwef','Unlocked','efwef009@gmail.com'),('U010','1ewef','efw','Unlocked','onewef010@gmail.com'),('U011','PALGO','019','Unlocked','palgo011@gmail.com'),('U012','goki','21212','Locked','goki012@gmail.com');
