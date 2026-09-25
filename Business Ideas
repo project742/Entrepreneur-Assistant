@@ -1,0 +1,210 @@
+"""import mysql.connector as ms
+from tabulate import tabulate
+x = ms.connect(host="localhost", user="root", passwd="root", database="entrepreneur_assistant")
+cur = x.cursor()
+Deparments=list()
+License={1:"Business Registration",2:"GST Registration",3:"Shop & Establishment License",4:"Trade License",5:"FSSAI License",
+         6:"Professional Tax Registration",7:"PAN","TAN",0:"MSME / Udyam Registration",8:"IEC (Import Export Code)",9:"Factory License",
+         10:"Pollution Control Consent",11:"Fire Safety / Fire NOC",12:"BIS Certification",
+         13:"Legal Metrology License",14:"Copyright Registration",15:"Trademark Registration",16:"Patent Registration",
+         17:"RERA Registration",18:"RBI License","SEBI Registration",19:"ESI Registration",20:"EPF Registration"}
+while True:
+    print("Press 1 -----> View Business")
+    print("Press 2 -----> Add Business")
+    print("Press 3 -----> Update Business Ideas")
+    print("Press 4 -----> Delete Business Ideas")
+    print("Press 5 -----> Back")
+    choice = input("Enter your choice: ")
+    # View Buisness
+    if choice == "1":
+        cur.execute("Select B_ID,B_NAME,DEPT,COST_LM,COST_UP,SKILLS,LICENSE,DEMAND,RISK from business_ideas")
+        data = cur.fetchall()
+        print(tabulate(data,headers=["Business ID","Business Name","Department","COST_LM","COST_UP",
+        "Skills","License","Demand","Risk"],tablefmt="grid"))
+    # Add Business
+    elif choice == "2":
+        while True:
+            #add_uid("B","B_ID","Arun")
+            business_id = input("Enter the Business ID: ")
+            cur.execute("select B_ID from business_ideas where B_ID ='%s'",(business_id,))
+            result = cur.fetchall()
+            if len(result) > 0:
+                print("Business ID already exists! Please enter a different ID, Try again.")
+                break
+            b_name=input("Enter Business Name: ")
+            if not b_name.isalpha():
+                print("Invalid Input, Business Name should only contain numbers")
+                break
+            dept_key=input("Enter Business Department: ")
+            print("Departments ae listed below, Enert the Key of the corresponding department")
+            print(deparments)
+            if dept-key not in departments:
+                print("Invalid Key")
+                break
+            startup_cost = input("Enter the Startup Amount starting range:" )
+            if  not b_startup.isdigit():
+                print(" Amount should be a number")   
+                break
+            startup_end = input("Enter the Startup amount ending range:")
+            if  not b_startup.isdigit():
+                print(" Amount should be a number")   
+                break
+            b_skill=input("Enter Skills to Manage Business: ")
+            if not b_name.isalpha():
+                print("Invalid Input, Business Name should only contain numbers")
+                break
+            print("The Legal Licenses are Listed Below, Enter the Key for the corresponding license")
+            print(License)
+            license_key=input("Enter the Required License Key : ")
+            if license_key not in License:
+                print("Invalid Key")
+                break
+            b_demand=input("Enter Demand in Market (High/Medium/Low): ")
+            if  b_demand.lower() not in ("high","medium","low"):
+                print("Invalid Input")
+                break
+            b_risk  =input("Enter Risk Level in Market (High/Medium/Low): ")
+            if  b_risk.lower() not in ("high","medium","low"):
+                print("Invalid Input")
+                break
+            cur.execute("Insert into business_ideas  values ('%s','%s','%s','%s','%s','%s')"%
+            (business_id,b_name,b_dept,b_demand,b_risk))
+            cur.execute("Insert into business_details values ('%s','%s','%s','%s')"%
+            (business_id,startup_cost,b_skill,departments[license_key]))                 
+            x.commit()
+            print("Business added Successfully!")                   
+    # Update Business
+    elif choice == "3":
+        business_id = input("Enter Business ID to update: ")
+        cur.execute("select B_ID from business_ideas where B_ID = %s",(business_id,))
+        result = cur.fetchall()
+
+        if len(result) == 0:
+            print("Business ID not found!")
+        else:
+            ans="y"
+            while ans == "y":
+                print("1 -----> Update Business Name")
+                print("2 -----> Update Description")
+                print("3 -----> Update Department")
+                print("4 -----> Update Demand")
+                print("5 -----> Update Risk")
+                print("6 -----> Update Cost")
+                print("7 -----> Update Skill")
+                print("8 -----> Update License")
+                print("9 -----> Back")
+                choice = input("Enter your choice: ")
+                while choice not in '123456789':
+                    choice=input("Please Enter a Valid Choice: ")
+
+                if choice == "1":
+                    value = input("Enter New Business Name: ")
+                    cur.execute("update business_ideas set B_NAME = %s where B_ID = %s",(value,business_id))
+                    x.commit()
+                    print("Record Updated Successfully!")
+
+                elif choice == "2":
+                    value = input("Enter New Description: ")
+                    cur.execute("update business_ideas set DESCRIPTION = %s where B_ID = %s",(value,business_id))
+                    x.commit()
+                    print("Record Updated Successfully!")
+
+                elif choice == "3":
+                    value = input("Enter New Department: ")
+                    cur.execute("update business_ideas set DEPT = %s where B_ID = %s",(value,business_id))
+                    x.commit()
+                    print("Record Updated Successfully!")
+
+                elif choice == "4":
+                    value = input("Enter New Demand: ")
+                    cur.execute("update business_ideas set DEMAND = %s where B_ID = %s",(value,business_id))
+                    x.commit()
+                    print("Record Updated Successfully!")
+
+                elif choice == "5":
+                    value = input("Enter New Risk: ")
+                    cur.execute("update business_ideas set RISK = %s where B_ID = %s",(value,business_id))
+                    x.commit()
+                    print("Record Updated Successfully!")
+
+                elif choice == "6":
+                    value = int(input("Enter Cost: "))
+                    cur.execute("update business_requirement set COST_LL = %s where B_ID = %s",(value,business_id))
+                    x.commit()
+                    print("Record Updated Successfully!")
+
+                elif choice == "7":
+                    value = input("Enter Skills: ")
+                    cur.execute("update business_requirement set SKILLS = %s where B_ID = %s",(value,business_id))
+                    x.commit()
+                    print("Record Updated Successfully!")
+
+                elif choice == "8":
+                    value = input("Enter License: ")
+                    cur.execute("update business_requirement set LICENSE = %s where B_ID = %s",(value,business_id))
+                    x.commit()
+                    print("Record Updated Successfully!")
+
+                elif choice == "9":
+                    break
+
+                ans = input("Do you want to update more? (Y/N): ").lower()
+                
+    # Delete Business
+    elif choice == "4":
+        while True:
+            bids = list()
+            business_id = input("Enter Business Id : ")
+            cur.execute("Select B_ID from business_ideas")
+            result = cur.fetchall()
+            for i in result:
+                for j in i :
+                    bids += [j]
+            print(bids)
+            if business_id in i :
+                print("Business ID not found!,Enter a already existing Business ID")
+                break
+            sure = input("Are You Sure To Delete (Y/N): ")
+            if sure.lower() == "y":
+                cur.execute("Delete from business_ideas where B_ID = %s",(business_id,))
+                cur.execute("Delete from business_details where B_ID = %s",(business_id,))
+                x.commit()
+                print("Business Idea deleted successfully!")
+                # Updating  all remaining BID
+                n = int(business_id[1:])
+                for row in result:
+                    old_id = row[0]
+                    number = int(old_id[1:])
+                    if number > n:
+                        number = number - 1
+                        if number < 10:
+                                new_id = "B00" + str(number)
+                        elif number < 100:
+                                new_id = "B0" + str(number)
+                        else:
+                            new_id = "B" + str(number)
+                        cur.execute("Update business_ideas set B_ID = '%s' where b_id = '%s'"%(new_id, old_id))
+                        cur.execute("Update business_requirement set B_ID = '%s' where b_id = '%s'"%(new_id, old_id))
+                    x.commit()
+                print("Business deleted successfully")
+                print("Business IDs updated successfully")
+            else:
+                print("Deletion Cancelled")
+            break
+
+    # Back
+    elif choice == "5":
+        break
+    
+    # Invalid Input
+    else:
+        print("Invalid choice.")
+
+cur.close()
+x.close()
+"""
+
+
+
+
+
