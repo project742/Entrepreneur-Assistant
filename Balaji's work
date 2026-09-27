@@ -1,0 +1,514 @@
+import mysql.connector as ms
+from random import randint
+
+x = ms.connect(
+    host="localhost",
+    user="root",
+    passwd="root",
+    database="entrepreneur_assistant"
+)
+
+cur = x.cursor()
+
+
+def check_date():
+    date = input("Enter Date (DD-MM-YYYY) : ")
+
+    if len(date) == 10 and date[2] == "-" and date[5] == "-":
+        return True, date
+    else:
+        print("Invalid date format")
+        return False, date
+
+
+def add_uid(letter, column, table):
+    cur.execute("SELECT " + column + " FROM " + table)
+    data = cur.fetchall()
+
+    n = len(data) + 1
+
+    if n < 10:
+        return letter + "00" + str(n)
+    elif n < 100:
+        return letter + "0" + str(n)
+    else:
+        return letter + str(n)
+
+
+# ---------------- PRODUCT MANAGEMENT ----------------
+
+def add_product():
+    product_id = add_uid("P", "product_id", "products")
+
+    name = input("Enter Product Name : ")
+    price = input("Enter Product Price : ")
+    stock = input("Enter Stock Quantity : ")
+    low_stock = input("Enter Low Stock Limit : ")
+
+    cur.execute(
+        "INSERT INTO products(product_id, product_name, price, stock, low_stock) "
+        "VALUES('" + product_id + "', '" + name + "', " + price + ", " +
+        stock + ", " + low_stock + ")"
+    )
+
+    x.commit()
+
+    print("Product added successfully.")
+    print("Product ID :", product_id)
+
+
+def update_product():
+    product_id = input("Enter Product ID : ")
+
+    cur.execute(
+        "SELECT * FROM products WHERE product_id = '" + product_id + "'"
+    )
+
+    data = cur.fetchone()
+
+    if data is None:
+        print("Product not found.")
+        return
+
+    name = input("Enter New Product Name : ")
+    price = input("Enter New Price : ")
+    stock = input("Enter New Stock : ")
+    low_stock = input("Enter New Low Stock Limit : ")
+
+    cur.execute(
+        "UPDATE products SET product_name = '" + name +
+        "', price = " + price +
+        ", stock = " + stock +
+        ", low_stock = " + low_stock +
+        " WHERE product_id = '" + product_id + "'"
+    )
+
+    x.commit()
+
+    print("Product updated successfully.")
+
+
+def delete_product():
+    product_id = input("Enter Product ID : ")
+
+    cur.execute(
+        "SELECT * FROM products WHERE product_id = '" + product_id + "'"
+    )
+
+    data = cur.fetchone()
+
+    if data is None:
+        print("Product not found.")
+        return
+
+    cur.execute(
+        "DELETE FROM products WHERE product_id = '" + product_id + "'"
+    )
+
+    x.commit()
+
+    print("Product deleted successfully.")
+
+
+def view_products():
+    cur.execute("SELECT * FROM products")
+
+    data = cur.fetchall()
+
+    print("\n------------------------------------------------------------")
+    print("ID       Product Name          Price       Stock")
+    print("------------------------------------------------------------")
+
+    for row in data:
+        print(row[0], "   ", row[1], "          ", row[2], "      ", row[3])
+
+    print("------------------------------------------------------------")
+
+
+def search_product():
+    name = input("Enter Product Name to Search : ")
+
+    cur.execute(
+        "SELECT * FROM products WHERE product_name LIKE '%" + name + "%'"
+    )
+
+    data = cur.fetchall()
+
+    if len(data) == 0:
+        print("Product not found.")
+    else:
+        print("\nSearch Result")
+        print("------------------------------------------------------------")
+
+        for row in data:
+            print("ID :", row[0])
+            print("Name :", row[1])
+            print("Price :", row[2])
+            print("Stock :", row[3])
+            print("------------------------------------------------------------")
+
+
+# ---------------- SALES MANAGEMENT ----------------
+
+def add_sale():
+    product_id = input("Enter Product ID : ")
+
+    cur.execute(
+        "SELECT product_name, price, stock FROM products "
+        "WHERE product_id = '" + product_id + "'"
+    )
+
+    product = cur.fetchone()
+
+    if product is None:
+        print("Product not found.")
+        return
+
+    quantity = input("Enter Quantity Sold : ")
+
+    cur.execute(
+        "SELECT stock FROM products WHERE product_id = '" + product_id +
+        "' AND stock >= " + quantity
+    )
+
+    stock_check = cur.fetchone()
+
+    if stock_check is None:
+        print("Not enough stock.")
+        return
+
+    sale_id = add_uid("S", "sale_id", "sales")
+    customer_name = input("Enter Customer Name : ")
+
+    valid, date = check_date()
+
+    if valid == False:
+        return
+
+    cur.execute(
+        "INSERT INTO sales(sale_id, product_id, customer_name, quantity, sale_date, total) "
+        "VALUES('" + sale_id + "', '" + product_id + "', '" +
+        customer_name + "', " + quantity + ", '" + date +
+        "', (SELECT price FROM products WHERE product_id = '" +
+        product_id + "') * " + quantity + ")"
+    )
+
+    cur.execute(
+        "UPDATE products SET stock = stock - " + quantity +
+        " WHERE product_id = '" + product_id + "'"
+    )
+
+    x.commit()
+
+    print("Sale added successfully.")
+    print("Sale ID :", sale_id)
+
+
+def update_sale():
+    sale_id = input("Enter Sale ID : ")
+
+    cur.execute(
+        "SELECT * FROM sales WHERE sale_id = '" + sale_id + "'"
+    )
+
+    sale = cur.fetchone()
+
+    if sale is None:
+        print("Sale not found.")
+        return
+
+    customer_name = input("Enter New Customer Name : ")
+    quantity = input("Enter New Quantity : ")
+
+    cur.execute(
+        "SELECT stock FROM products "
+        "WHERE product_id = '" + sale[1] +
+        "' AND stock + (SELECT quantity FROM sales WHERE sale_id = '" +
+        sale_id + "') >= " + quantity
+    )
+
+    available_stock = cur.fetchone()
+
+    if available_stock is None:
+        print("Not enough stock.")
+        return
+
+    cur.execute(
+        "UPDATE sales SET customer_name = '" + customer_name +
+        "', quantity = " + quantity +
+        ", total = (SELECT price FROM products WHERE product_id = '" +
+        sale[1] + "') * " + quantity +
+        " WHERE sale_id = '" + sale_id + "'"
+    )
+
+    cur.execute(
+        "UPDATE products SET stock = stock + "
+        "(SELECT quantity FROM sales WHERE sale_id = '" + sale_id + "') - " +
+        quantity + " WHERE product_id = '" + sale[1] + "'"
+    )
+
+    x.commit()
+
+    print("Sale updated successfully.")
+
+
+def delete_sale():
+    sale_id = input("Enter Sale ID : ")
+
+    cur.execute(
+        "SELECT * FROM sales WHERE sale_id = '" + sale_id + "'"
+    )
+
+    sale = cur.fetchone()
+
+    if sale is None:
+        print("Sale not found.")
+        return
+
+    cur.execute(
+        "UPDATE products SET stock = stock + "
+        "(SELECT quantity FROM sales WHERE sale_id = '" + sale_id + "') "
+        "WHERE product_id = '" + sale[1] + "'"
+    )
+
+    cur.execute(
+        "DELETE FROM sales WHERE sale_id = '" + sale_id + "'"
+    )
+
+    x.commit()
+
+    print("Sale deleted successfully.")
+
+
+def view_sales():
+    cur.execute(
+        "SELECT s.sale_id, p.product_name, s.customer_name, "
+        "s.quantity, s.sale_date, s.total "
+        "FROM sales s, products p "
+        "WHERE s.product_id = p.product_id"
+    )
+
+    data = cur.fetchall()
+
+    print("\n--------------------------------------------------------------------------")
+    print("Sale ID   Product       Customer       Qty       Date        Total")
+    print("--------------------------------------------------------------------------")
+
+    for row in data:
+        print(
+            row[0], "   ", row[1], "   ", row[2],
+            "   ", row[3], "   ", row[4], "   ", row[5]
+        )
+
+    print("--------------------------------------------------------------------------")
+
+
+# ---------------- SALES REPORT ----------------
+
+def daily_sales_report():
+    valid, date = check_date()
+
+    if valid == False:
+        return
+
+    cur.execute(
+        "SELECT SUM(total) FROM sales WHERE sale_date = '" + date + "'"
+    )
+
+    result = cur.fetchone()
+
+    if result[0] is None:
+        print("No sales on this date.")
+    else:
+        print("Total Sales on", date, "=", result[0])
+
+
+def monthly_sales_report():
+    month = input("Enter Month (MM) : ")
+    year = input("Enter Year (YYYY) : ")
+
+    if len(month) != 2 or len(year) != 4:
+        print("Invalid month or year.")
+        return
+
+    cur.execute(
+        "SELECT SUM(total) FROM sales "
+        "WHERE sale_date LIKE '%-" + month + "-" + year + "'"
+    )
+
+    result = cur.fetchone()
+
+    if result[0] is None:
+        print("No sales in this month.")
+    else:
+        print("Total Sales =", result[0])
+
+
+def product_sales_report():
+    cur.execute(
+        "SELECT p.product_name, SUM(s.quantity), SUM(s.total) "
+        "FROM sales s, products p "
+        "WHERE s.product_id = p.product_id "
+        "GROUP BY p.product_name"
+    )
+
+    data = cur.fetchall()
+
+    print("\n-----------------------------------------------")
+    print("Product             Quantity        Sales")
+    print("-----------------------------------------------")
+
+    for row in data:
+        print(row[0], "          ", row[1], "          ", row[2])
+
+    print("-----------------------------------------------")
+
+
+def total_sales():
+    cur.execute("SELECT SUM(total) FROM sales")
+
+    result = cur.fetchone()
+
+    if result[0] is None:
+        print("Total Sales = 0")
+    else:
+        print("Total Sales =", result[0])
+
+
+def low_stock_report():
+    cur.execute(
+        "SELECT product_id, product_name, stock FROM products "
+        "WHERE stock <= low_stock"
+    )
+
+    data = cur.fetchall()
+
+    if len(data) == 0:
+        print("No products have low stock.")
+    else:
+        print("\nLOW STOCK PRODUCTS")
+        print("---------------------------------------")
+
+        for row in data:
+            print("Product ID :", row[0])
+            print("Product Name :", row[1])
+            print("Stock :", row[2])
+            print("---------------------------------------")
+
+
+# ---------------- MENUS ----------------
+
+def sales_management():
+    while True:
+        print("\n==========================================")
+        print("           SALES MANAGEMENT")
+        print("==========================================")
+        print("1. Add Sale")
+        print("2. Update Sale")
+        print("3. Delete Sale")
+        print("4. View Sales")
+        print("5. Back")
+
+        choice = input("\nEnter your choice : ")
+
+        if choice == "1":
+            add_sale()
+        elif choice == "2":
+            update_sale()
+        elif choice == "3":
+            delete_sale()
+        elif choice == "4":
+            view_sales()
+        elif choice == "5":
+            break
+        else:
+            print("Invalid Input")
+
+
+def sales_report():
+    while True:
+        print("\n==========================================")
+        print("              SALES REPORT")
+        print("==========================================")
+        print("1. Daily Sales Report")
+        print("2. Monthly Sales Report")
+        print("3. Product-wise Sales Report")
+        print("4. Total Sales")
+        print("5. Low Stock Alert")
+        print("6. Back")
+
+        choice = input("\nEnter your choice : ")
+
+        if choice == "1":
+            daily_sales_report()
+        elif choice == "2":
+            monthly_sales_report()
+        elif choice == "3":
+            product_sales_report()
+        elif choice == "4":
+            total_sales()
+        elif choice == "5":
+            low_stock_report()
+        elif choice == "6":
+            break
+        else:
+            print("Invalid Input")
+
+
+def product_management():
+    while True:
+        print("\n==========================================")
+        print("          PRODUCT MANAGEMENT")
+        print("==========================================")
+        print("1. Add Product")
+        print("2. Update Product")
+        print("3. Delete Product")
+        print("4. View Products")
+        print("5. Search Product")
+        print("6. Back")
+
+        choice = input("\nEnter your choice : ")
+
+        if choice == "1":
+            add_product()
+        elif choice == "2":
+            update_product()
+        elif choice == "3":
+            delete_product()
+        elif choice == "4":
+            view_products()
+        elif choice == "5":
+            search_product()
+        elif choice == "6":
+            break
+        else:
+            print("Invalid Input")
+
+
+# ---------------- MAIN PROGRAM ----------------
+
+while True:
+    print("\n==========================================")
+    print("       ENTREPRENEUR ASSISTANT")
+    print("==========================================")
+    print("1. Sales Management")
+    print("2. Sales Report")
+    print("3. Product Management")
+    print("4. Exit")
+
+    choice = input("\nEnter your choice : ")
+
+    if choice == "1":
+        sales_management()
+    elif choice == "2":
+        sales_report()
+    elif choice == "3":
+        product_management()
+    elif choice == "4":
+        print("Thank you for using the program.")
+        break
+    else:
+        print("Invalid Input")
+
+cur.close()
+x.close()
