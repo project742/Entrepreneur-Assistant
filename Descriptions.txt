@@ -1,0 +1,43 @@
+NEW IDEAS
+
+2)Forgot Password for users
+3)Give actual menu name in loading bar	
+
+PERMISSIONS NEEDED TO ASK TO PRINCIPAL
+
+1)Usage of exit() --- to exit the entire program
+2) Usage of centre()
+
+TABLES
+
+Admin:
+admin_details   ----  will be created by program
+user_ids        ----  will be created by program
+business_ideas  ----  should be created and records should be inserted from admin
+
+Users:
+
+workers           ----- by program
+attendance        ----- by program
+sal_attendance    ----- by program
+given_salary      ----- by program
+Products          ----- by program
+Sales             ----- by program
+
+Remaining Tasks:
+For Admin
+1)Uniform design for printing menus                                         ---- 
+2)Same design to be printed for adding,updating,deleting,viewing a thing    ---- 
+3)add loading() in places where it is required                              ---- 
+4)at tabulate small lettered heading                                        ---- 
+5)Invalid option print("\n⚠ Invalid choice.")                               ---- 
+                 print("  Please select an option from 1 to 7.")
+Back
+ print("\n↩️  Returning to the previous menu...")
+asking choice
+ +------------------------------------------+
+➤ Please select an option to continue: 	
+6)Check the arrow at the enter place                                         ----    
+
+
+                        
