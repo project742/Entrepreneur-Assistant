@@ -9,5 +9,5 @@ def loading_bar(text,delay,space):
         time.sleep(delay)
     print("] 100%")
     print("\n")
-loading_bar("Registering new entry...",0.015,48)
+loading_bar("Analysing data...",0.015,52)
 

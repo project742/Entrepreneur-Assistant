@@ -93,7 +93,7 @@ def add_uid(letter,column,table,user_cur=None,admin=True):
             return letter + str(n)
 def send_notification(receiver_email,message,need_message=True):
     sender_email = "project562009@gmail.com"
-    sender_password = "kauvscqlmbtdrabk"
+    sender_password = ""
     try:
         server = smtplib.SMTP("smtp.gmail.com", 587)
         server.starttls()
@@ -134,7 +134,7 @@ def user_menu(uname):
         print("  Press 1 ----> 📚 View Business")
         print("  Press 2 ----> 🏢 My Business")
         print("  Press 3 ----> ↩ Back")
-        choice = input("\n➤ Enter your choice: ")
+        choice = input("➤ Please select an option to continue: ")
         if choice == "1":
             cur.execute("Select * from business_ideas")
             data = cur.fetchall()
@@ -148,14 +148,13 @@ def user_menu(uname):
                 print("\n+------------------------------------------+")
                 print("|          💼 BUSINESS EXPLORER            |")
                 print("+------------------------------------------+")
-                print("|  1. 📚 Business Book                     |")
-                print("|  2. 🔎 Search Business                   |")
-                print("|  3. 💰 Browse by Investment              |")
-                print("|  4. 🏢 Browse by Department              |")
-                print("|  5. ✨ Suggest Business                  |")
-                print("|  6. ↩️ Back                              |")
-                print("+------------------------------------------+")
-                choice = input("\n➤ Enter your choice: ")
+                print("  Press 1 ----> 📚 Business Book          ")
+                print("  Press 2 ----> 🔎 Search Business        ")
+                print("  Press 3 ----> 💰 Browse by Investment   ")
+                print("  Press 4 ----> 🏢 Browse by Department   ")
+                print("  Press 5 ----> ✨ Suggest Business       ")
+                print("  Press 6 ----> ↩️ Back                  ")
+                choice = input("➤ Please select an option to continue: ")
                 if choice == "1":
                     cur.execute("Select B_ID,B_Name from business_ideas")
                     business = cur.fetchall()
@@ -198,6 +197,7 @@ def user_menu(uname):
                     print("|            🔎 SEARCH BUSINESS            |")
                     print("+------------------------------------------+")
                     Id = input("\n➤ Enter the Business ID: ")
+                    loading_bar("Searching business...",0.015,49)
                     cur.execute("select * from business_ideas where B_ID = %s",(Id,))
                     data = cur.fetchone()
                     if data is None:
@@ -212,6 +212,7 @@ def user_menu(uname):
                     print("|         💰 BROWSE BY INVESTMENT          |")
                     print("+------------------------------------------+")
                     amount = input("\n➤ Enter your investment amount: ₹")
+                    loading_bar("Searching business...",0.015,49)
                     if amount.isdigit():
                         cur.execute("Select B_NAME,COST_LM,SKILLS,LICENSE,DEMAND,RISK from business_ideas where COST_LM <= %s"%
                         (int(amount),))
@@ -242,6 +243,7 @@ def user_menu(uname):
                     for dept_name in departments:
                         print("  🔹",dept_name.title())
                     dept = input("\n➤ Enter the department: ")
+                    loading_bar("Searching business...",0.015,49)
                     if dept.lower() in departments:
                         cur.execute("Select B_NAME,Cost_LM,Skills,License,Demand,Risk from business_ideas where dept = '%s'"%
                         (dept,))
@@ -356,6 +358,7 @@ def user_menu(uname):
                                temp = results[i]
                                results[i] = results[j]
                                results[j] = temp
+                    loading_bar("Analysing data...",0.015,52)
                     print("\n+" + "-"*94 + "+")
                     print("|" + "                            ✨ YOUR BUSINESS SUGGESTIONS\t\t\t\t       " + "|")
                     print("+" + "-"*94 + "+")
@@ -377,14 +380,15 @@ def user_menu(uname):
                         table.append([count,b[1],emoji + " " + str(int(percentage)) + "%","₹" + str(b[3]),b[4],b[5],b[6],b[7]])
                         if count == 10:
                             break
-                    print(tabulate(table,headers=["No.","Business","Match Score","Startup Cost","Skills","License","Demand","Risk"]
+                    print(tabulate(table,headers=["Sno","Business","Match Score","Startup Cost","Skills","License","Demand","Risk"]
                     ,tablefmt="grid"))
                     print("\n✅ Suggestions are based on your answers.")
                 elif choice == "6":
                     print("\n↩️  Returning to the previous menu...")
                     break
                 else:
-                    print("\n❌ Invalid input! Please select a option from 1,2,3,4,5,6.")
+                    print("\n⚠ Invalid choice.")
+                    print("  Please select an option from 1 to 6.")
         elif choice == "2":
             while True:
                 print("\n+------------------------------------------+")
@@ -418,7 +422,7 @@ def user_menu(uname):
                                 print("\n+------------------------------------------+")
                                 print("|             👥 WORKER DIRECTORY          |")
                                 print("+------------------------------------------+\n")
-                                print(tabulate(records,headers=["W_ID","   W_NAME","     POST","JOIN_DATE","     EMAIL"],tablefmt="grid"))
+                                print(tabulate(records,headers=["W_ID","   Worker Name","     Post","Join_Date","     Email"],tablefmt="grid"))
                             else:
                                 print("\n⚠️  No workers found!\n")
                         elif choice == "2":
@@ -1439,7 +1443,7 @@ def user_menu(uname):
             break
         else:
             print("\n⚠ Invalid choice.")
-            print("  Please select an option from 1,2,3.")
+            print("  Please select an option from 1 to 3.")
 
 
 
