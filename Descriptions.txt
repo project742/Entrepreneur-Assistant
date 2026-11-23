@@ -38,7 +38,7 @@ asking choice
  +------------------------------------------+
 ➤ Please select an option to continue: 	
 6)Check the arrow at the enter place                                         ---- 
-sender_password = "kauvscqlmbtdrabk"
+sender_password = ""
 
 
                         
