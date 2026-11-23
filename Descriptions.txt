@@ -29,7 +29,7 @@ For Admin
 1)Uniform design for printing menus                                         ---- 
 2)Same design to be printed for adding,updating,deleting,viewing a thing    ---- 
 3)add loading() in places where it is required                              ---- 
-4)at tabulate small lettered heading                                        ---- 
+4)at tabulate small lettered heading                                        ----  done for user
 5)Invalid option print("\n⚠ Invalid choice.")                               ---- 
                  print("  Please select an option from 1 to 7.")
 Back
@@ -37,7 +37,8 @@ Back
 asking choice
  +------------------------------------------+
 ➤ Please select an option to continue: 	
-6)Check the arrow at the enter place                                         ----    
+6)Check the arrow at the enter place                                         ---- 
+sender_password = "kauvscqlmbtdrabk"
 
 
                         

@@ -10,4 +10,3 @@ def loading_bar(text,delay,space):
     print("] 100%")
     print("\n")
 loading_bar("Analysing data...",0.015,52)
-

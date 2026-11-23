@@ -394,27 +394,27 @@ def user_menu(uname):
                 print("\n+------------------------------------------+")
                 print("|        🏢 MY BUSINESS MANAGEMENT         |")
                 print("+------------------------------------------+")
-                print("|  Press 1 ----> 👥 Workers Management     |")
-                print("|  Press 2 ----> 📅 Attendance             |")
-                print("|  Press 3 ----> 💰 Manage Salary          |")
-                print("|  Press 4 ----> 📦 Product Management     |")
-                print("|  Press 5 ----> 🛒 Sales Management       |")
-                print("|  Press 6 ----> 📊 Sales Report           |")
-                print("|  Press 7 ----> ↩ Back                   |")
+                print("  Press 1 ----> 👥 Workers Management     ")
+                print("  Press 2 ----> 📅 Attendance             ")
+                print("  Press 3 ----> 💰 Manage Salary          ")
+                print("  Press 4 ----> 📦 Product Management     ")
+                print("  Press 5 ----> 🛒 Sales Management       ")
+                print("  Press 6 ----> 📊 Sales Report           ")
+                print("  Press 7 ----> ↩ Back                   ")
                 print("+------------------------------------------+")
-                choice = input("\n➤ Enter your choice : ")
+                choice = input("➤ Please select an option to continue: ")
                 if choice == "1":
                     while True:
                         print("\n+------------------------------------------+")
                         print("|          👥 WORKERS MANAGEMENT           |")
                         print("+------------------------------------------+")
-                        print("|  Press 1 ----> View Worker               |")
-                        print("|  Press 2 ----> Add Worker                |")
-                        print("|  Press 3 ----> Update Worker             |")
-                        print("|  Press 4 ----> Delete Worker             |")
-                        print("|  Press 5 ----> Back                      |")
+                        print("  Press 1 ----> 👁 View Worker            ")
+                        print("  Press 2 ----> ➕ Add Worker              ")
+                        print("  Press 3 ----> ✏️ Update Worker           ")
+                        print("  Press 4 ----> 🗑 Delete Worker         ")
+                        print("  Press 5 ----> ↩️ Back                    ")
                         print("+------------------------------------------+")
-                        choice = input("\n➤ Enter your choice : ")
+                        choice = input("➤ Please select an option to continue: ")
                         if choice == "1":
                             user_cur.execute("Select * from workers")
                             records = user_cur.fetchall()
@@ -422,9 +422,11 @@ def user_menu(uname):
                                 print("\n+------------------------------------------+")
                                 print("|             👥 WORKER DIRECTORY          |")
                                 print("+------------------------------------------+\n")
+                                loading_bar("Fetching records...",0.01,51)
+                                print("\n✓ Worker records retrieved successfully!")
                                 print(tabulate(records,headers=["W_ID","   Worker Name","     Post","Join_Date","     Email"],tablefmt="grid"))
                             else:
-                                print("\n⚠️  No workers found!\n")
+                                print("\n⚠️  No workers records found!\n")
                         elif choice == "2":
                             print("\n+------------------------------------------+")
                             print("|               ➕ ADD WORKER              |")
@@ -466,10 +468,11 @@ def user_menu(uname):
                                     continue
                             else:
                                 email = "NULL"
-                            user_cur.execute("Insert into workers VALUES ('%s','%s','%s','%s','%s')"% 
+                            user_cur.execute("Insert into workers values ('%s','%s','%s','%s','%s')"% 
                             (wid,name,post,join_date,email))
                             user_x.commit()
-                            print("\n✓ Worker added successfully!")
+                            loading_bar("Saving new details...",0.015,50)
+                            print("\n✓ Worker details added successfully!")
                         elif choice == "3":
                             print("\n+------------------------------------------+")
                             print("|              ✏️ UPDATE WORKER            |")
@@ -516,10 +519,9 @@ def user_menu(uname):
                                         continue
                                 user_cur.execute("""Update workers set W_NAME = '%s',POST = '%s',JOIN_DATE = '%s',EMAIL = '%s'where
                                 W_ID = '%s'"""%(name,post,join_date,email,wid))
+                                loading_bar("Saving modifications...",0.015,49)
                                 user_x.commit()
-                                print("\n+-----------------------------------------------+")
-                                print("|       ✓ WORKER DETAILS UPDATED SUCCESSFULLY   |")
-                                print("+-----------------------------------------------+")
+                                print("✓ Worker details updated successfully")
                             else:
                                 print("\n✗ Worker ID not found!")
                         elif choice == "4":
@@ -531,15 +533,14 @@ def user_menu(uname):
                             if user_cur.fetchone() is None:
                                 print("\n✗ Worker ID not found!")
                                 continue
-                            sure = input("\n⚠️  Are you sure you want to delete? (Y/N) : ").lower()
+                            sure = input("\n➤ ⚠️  Are you sure you want to delete? (Y/N) : ").lower()
                             if sure == "y":
                                 user_cur.execute("Delete from workers where W_ID='%s'" % (wid,))
                                 user_cur.execute("Delete from attendance where W_ID='%s'" % (wid,))
                                 user_cur.execute("Delete from sal_attendance where W_ID='%s'" % (wid,))
                                 user_x.commit()
-                                print("\n+-----------------------------------------------+")
-                                print("|       ✓ WORKER DELETED SUCCESSFULLY           |")
-                                print("+-----------------------------------------------+")
+                                loading_bar("Removing selected record...",0.015,46)
+                                print(" ✓ Worker details  deleted successfully")
                                 update_uid(user_cur,user_x,"Workers","W_ID","W",wid)
                             else:
                                 print("\n↩ Deletion cancelled.")
@@ -547,7 +548,8 @@ def user_menu(uname):
                             print("\n↩ Returning to Business Management...")
                             break
                         else:
-                            print("\n⚠️  Invalid choice! Please enter a number from 1 to 5.")
+                            print("\n⚠ Invalid choice.")
+                            print("  Please select an option from 1 to 5.")
                 elif choice == "2":
                     print("\n+------------------------------------------+")
                     print("|             📅 ATTENDANCE                |")
@@ -560,14 +562,14 @@ def user_menu(uname):
                         continue
                     while True:
                         print("\n+--------------------------------------+")
-                        print("|          📅 ATTENDANCE MENU          |")
+                        print("|       📅 ATTENDANCE MANAGEMENT       |")
                         print("+--------------------------------------+")
-                        print("|  Press 1 ----> View Attendance       |")
-                        print("|  Press 2 ----> Mark Attendance       |")
-                        print("|  Press 3 ----> Delete Attendance     |")
-                        print("|  Press 4 ----> Back                  |")
+                        print("\n  Press 1 ----> 👁 View Attendance")
+                        print("  Press 2 ----> ➕ Mark Attendance")
+                        print("  Press 3 ----> 🗑 Delete Attendance")
+                        print("  Press 4 ----> ↩️ Back\n")
                         print("+--------------------------------------+")
-                        choice = input("\n➤ Enter your choice : ")
+                        choice = input("➤ Please select an option to continue: ")
                         if choice == "1":
                             print("\n",months)
                             month = input("\n➤ Enter the month's key : ")
@@ -582,13 +584,13 @@ def user_menu(uname):
                             (wid,months[month],year))
                             record = user_cur.fetchall()
                             if len(record) == 0:
-                                print("\n+------------------------------------------+")
-                                print("|         ⚠ NO ATTENDANCE FOUND           |")
-                                print("+------------------------------------------+")
+                                print("\n⚠️  No attendance records found!\n")
                             else:
+                                loading_bar("Fetching records...",0.01,51)
+                                print("\n✓ Attendance records retrieved successfully!")
                                 print("\n+------------------------------------------+")
-                                print("|          📋 ATTENDANCE RECORDS           |")
-                                print("+------------------------------------------+")
+                                print("|             👥 ATTENDANCE DIRECTORY      |")
+                                print("+------------------------------------------+\n")
                                 print(tabulate(record,headers=["Worker ID","Day","Month","Year","Status"],tablefmt="grid"))
                         #(DD-MM-YYYY)
                         elif choice == "2":
@@ -601,10 +603,10 @@ def user_menu(uname):
                                     print("⚠ Attendance already exists for",wid,"on",entered_date)
                                     continue
                                 print("\n+------------------------------------------+")
-                                print("|           ✚ MARK ATTENDANCE             |")
-                                print("+------------------------------------------+")
-                                print("|  Press 1 ----> Present                   |")
-                                print("|  Press 2 ----> Absent                    |")
+                                print("|           ✚ MARK ATTENDANCE              |")
+                                print("+-------------------------------------------+")
+                                print("\n  Press 1 ----> ✅ Present")
+                                print("  Press 2 ----> ❌ Absent\n")
                                 print("+------------------------------------------+")
                                 choice = input("\n➤ Enter the status : ")
                                 if choice == "1":
@@ -630,9 +632,8 @@ def user_menu(uname):
                                 user_cur.execute("Insert into attendance values('%s','%s','%s','%s','%s')"%
                                 (wid,entered_date[:2],months[entered_date[3:5]],entered_date[6:],status))
                                 user_x.commit()
-                                print("\n+------------------------------------------+")
-                                print("|       ✓ ATTENDANCE MARKED SUCCESSFULLY   |")
-                                print("+------------------------------------------+")
+                                loading_bar("Saving new details...",0.015,50)
+                                print("\n✓ Attendance marked successfully!")
                                 print("  ➤ Worker ID :",wid)
                                 print("  ➤ Date      :",entered_date)
                                 print("  ➤ Status    :",status.upper())
@@ -641,11 +642,11 @@ def user_menu(uname):
                         elif choice == "3":
                             while True:
                                 print("\n+------------------------------------------+")
-                                print("|          🗑 DELETE ATTENDANCE            |")
-                                print("+------------------------------------------+")
-                                print("|  Press 1 ----> Delete by Month           |")
-                                print("|  Press 2 ----> Delete by Year            |")
-                                print("|  Press 3 ----> Back                      |")
+                                print("|          🗑️ DELETE ATTENDANCE            |")
+                                print("+--------------------------------------------+")
+                                print("\n  Press 1 ----> 📅 Delete by Month")
+                                print("  Press 2 ----> 🗓 Delete by Year")
+                                print("  Press 3 ----> ↩️ Back\n")
                                 print("+------------------------------------------+")
                                 choice = input("\n➤ Enter your choice : ")
                                 if choice == "1":
@@ -674,9 +675,8 @@ def user_menu(uname):
                                         user_cur.execute("""Delete from sal_attendance where w_id = '%s' and month='%s' and year =
                                         '%s'""" %(wid,months[month],year))
                                         user_x.commit()
-                                        print("\n+------------------------------------------+")
-                                        print("|      ✓ ATTENDANCE DELETED SUCCESSFULLY   |")
-                                        print("+------------------------------------------+")
+                                        loading_bar("Removing selected record...",0.015,46)
+                                        print(" ✓ Attendance records deleted successfully")
                                     else:
                                         print("\n↩ Deletion Cancelled.")
                                 elif choice == "2":
@@ -694,9 +694,8 @@ def user_menu(uname):
                                         user_cur.execute("Delete from attendance where w_id = '%s' and year='%s'" % (wid,year))
                                         user_cur.execute("Delete from sal_attendance where w_id = '%s' and year='%s'"  % (wid,year))
                                         user_x.commit()
-                                        print("\n+------------------------------------------+")
-                                        print("|      ✓ ATTENDANCE DELETED SUCCESSFULLY   |")
-                                        print("+------------------------------------------+")
+                                        loading_bar("Removing selected record...",0.015,46)
+                                        print(" ✓ Attendance records deleted successfully")
                                     else:
                                         print("\n↩ Deletion Cancelled.")
                                 elif choice == "3":
@@ -719,37 +718,37 @@ def user_menu(uname):
                         print("\n+-------------------------------------------+")
                         print("|             💵 SALARY OPTIONS             |")
                         print("+-------------------------------------------+")
-                        print("|  Press 1 ----> Manage Salary Details      |")
-                        print("|  Press 2 ----> Check Paid Leaves          |")
-                        print("|  Press 3 ----> Generate Salary            |")
-                        print("|  Press 4 ----> View Paid Salary           |")
-                        print("|  Press 5 ----> Delete Salary History      |")
-                        print("|  Press 6 ----> Back                       |")
+                        print("\n  Press 1 ----> ⚙️ Manage Salary Details")
+                        print("  Press 2 ----> 📅 Check Paid Leaves")
+                        print("  Press 3 ----> 🧾 Generate Salary")
+                        print("  Press 4 ----> 💰 View Paid Salary")
+                        print("  Press 5 ----> 🗑 Delete Salary History")
+                        print("  Press 6 ----> ↩️ Back\n")
                         print("+-------------------------------------------+")
-                        choice = input("\n➤ Enter your choice : ")
+                        choice = input("➤ Please select an option to continue: ")
                         if choice == "1":
                             while True:
-                                print("\n+-------------------------------------------+")
-                                print("|          🛠️ MANAGE POST SALARY          |")
+                                print("\n+---------------------------------------------+")
+                                print("|          🛠️ MANAGE POST SALARY            |")
+                                print("+---------------------------------------------+")
+                                print("\n  Press 1 ----> 👁 View All Posts")
+                                print("  Press 2 ----> ➕ Add New Post")
+                                print("  Press 3 ----> ✏️ Update Post Details")
+                                print("  Press 4 ----> 🗑  Delete Post")
+                                print("  Press 5 ----> ↩️ Back\n")
                                 print("+-------------------------------------------+")
-                                print("|  Press 1 ----> View All Posts             |")
-                                print("|  Press 2 ----> Add New Post               |")
-                                print("|  Press 3 ----> Update Post Details        |")
-                                print("|  Press 4 ----> Delete Post                |")
-                                print("|  Press 5 ----> Back                       |")
-                                print("+-------------------------------------------+")
-                                choice = input("\n➤ Enter your choice : ")
-                                if choice == "1": #P_ID varchar(10),Post varchar(30),Salary varchar(10)
+                                choice = input("➤ Please select an option to continue: ")
+                                if choice == "1":
                                     user_cur.execute("Select * from Post")
                                     posts = user_cur.fetchall()
                                     if len(posts) == 0:
-                                        print("\n+-------------------------------------------+")
-                                        print("|             ⚠ NO POSTS FOUND             |")
-                                        print("+-------------------------------------------+")
+                                        print("\n⚠️  No post records found!\n")
                                         continue
+                                    loading_bar("Fetching records...",0.01,51)
+                                    print("\n✓ Post records retrieved successfully!")
                                     print("\n+------------------------------------------+")
-                                    print("|              📋 POST DIRECTORY           |")
-                                    print("+------------------------------------------+")
+                                    print("|             📋 POST DIRECTORY            |")
+                                    print("+------------------------------------------+\n")
                                     print(tabulate(posts,headers=["Post ID","Post","Salary"],tablefmt="grid"))
                                 elif choice == "2":
                                     print("\n+------------------------------------------+")
@@ -768,9 +767,8 @@ def user_menu(uname):
                                     user_cur.execute("Insert into Post values('%s','%s','%s')" %
                                     (add_uid("P","P_ID","Post",user_cur,False),post.title(),salary))
                                     user_x.commit()
-                                    print("\n+------------------------------------------+")
-                                    print("|           ✓ POST ADDED SUCCESSFULLY      |")
-                                    print("+------------------------------------------+")
+                                    loading_bar("Saving new details...",0.015,50)
+                                    print("\n✓ Post added successfully!")
                                 elif choice == "3":
                                     pid = input("\n➤ Enter the Post ID : ")
                                     user_cur.execute("Select * from Post where P_ID='%s'" % (pid,))
@@ -803,9 +801,8 @@ def user_menu(uname):
                                     user_cur.execute("Update Post set Post = '%s',Salary ='%s' where P_Id ='%s'" %
                                     (post.title(),salary,pid))
                                     user_x.commit()
-                                    print("\n+------------------------------------------+")
-                                    print("|        ✓ POST DETAILS UPDATED            |")
-                                    print("+------------------------------------------+")
+                                    loading_bar("Saving modifications...",0.015,49)
+                                    print("✓ Post details updated successfully")
                                 elif choice == "4":
                                     pid = input("\n➤ Enter the Post ID : ")
                                     user_cur.execute("Select P_ID from Post where P_ID='%s'" % (pid,))
@@ -821,12 +818,12 @@ def user_menu(uname):
                                         user_cur.execute("Delete from Post where P_ID = '%s'" % (pid,))
                                         update_uid(user_cur,user_x,"Post","P_ID","P",pid)
                                         user_x.commit()
-                                        print("\n+--------------------------------------------+")
-                                        print("|           ✓ POST DELETED SUCCESSFULLY      |")
-                                        print("+--------------------------------------------+")
+                                        loading_bar("Removing selected record...",0.015,46)
+                                        print(" ✓ Post details deleted successfully")
                                     else:
                                         print("\n↩ Deletion Cancelled.")
                                 elif choice == "5":
+                                    print("\n↩ Returning to the previous menu...")
                                     break
                                 else:
                                    print("\n⚠ Invalid choice.")
@@ -861,14 +858,13 @@ def user_menu(uname):
                             else:
                                 user_cur.execute("Update paid_leaves set days='%s'" % (paid_leaves,))
                             user_x.commit()
-                            print("\n+--------------------------------------------+")
-                            print("|       ✓ PAID LEAVES UPDATED SUCCESSFULLY   |")
-                            print("+--------------------------------------------+")
+                            loading_bar("Saving modifications...",0.015,49)
+                            print("✓ Paid leaves updated successfully")
                         elif choice == "3":  # Generate Salary
                             print("\n+------------------------------------------+")
                             print("|             💰 GENERATE SALARY           |")
                             print("+------------------------------------------+")
-                            wid = input("\nEnter the Employee ID : ")
+                            wid = input("\n➤ Enter the Employee ID : ")
                             user_cur.execute("Select * from Attendance where w_id='%s'" % (wid,))
                             data = user_cur.fetchall()
                             if len(data) == 0:
@@ -971,19 +967,17 @@ def user_menu(uname):
                                     user_cur.execute("""Update Given_Salary set Total_Salary='%s' where W_ID='%s' and
                                     month='%s' and year='%s'""" %(str(final_salary),wid,month,year))
                                     user_x.commit()
-                                    print("\n+------------------------------------------+")
-                                    print("|       ✓ SALARY DETAILS UPDATED           |")
-                                    print("+------------------------------------------+")
+                                    loading_bar("Saving modifications...",0.015,49)
+                                    print("✓ Salary details updated successfully")
                                 else:
                                     print("\n↩ Updation Cancelled.")
                             else:
                                 user_cur.execute("""Insert into Given_Salary values('%s','%s','%s','%s')""" %
                                 (wid,month,year,str(final_salary)))
                                 user_x.commit()
-                                print("\n+------------------------------------------+")
-                                print("|       ✓ SALARY REGISTERED SUCCESSFULLY   |")
-                                print("+------------------------------------------+")
-                            notify = input("\nWant to send this receipt to the worker (Yes/No) : ")
+                                loading_bar("Saving new details...",0.015,50)
+                                print(" ✓ Salary registered successfully")
+                            notify = input("\n➤ Want to send this receipt to the worker (Yes/No) : ")
                             if notify.lower() == "yes":
                                 email_receipt = receipt.replace("|", " ")
                                 email_receipt = email_receipt.replace("₹","Rs.")
@@ -994,10 +988,10 @@ def user_menu(uname):
                             user_cur.execute("Select * from Given_Salary")
                             data = user_cur.fetchall()
                             if len(data) == 0:
-                                print("\n+------------------------------------------+")
-                                print("|             ⚠ NO SALARY PAID            |")
-                                print("+------------------------------------------+")
+                                print("\n⚠️  No paid salary records found!\n")
                                 continue
+                            loading_bar("Fetching records...",0.01,51)
+                            print("\n✓ Paid salary records retrieved successfully!")
                             print("\n+------------------------------------------+")
                             print("|             📋 PAID SALARY RECORDS       |")
                             print("+------------------------------------------+")
@@ -1025,9 +1019,7 @@ def user_menu(uname):
                             (wid,months[month],year))
                             data = user_cur.fetchall()
                             if len(data) == 0:
-                                print("\n+------------------------------------------+")
-                                print("|       ⚠ NO RECORDS FOUND FOR",wid,"      |")
-                                print("+------------------------------------------+")
+                                print(" ⚠ No Records found for",wid)
                                 continue
                             sure = input("\n➤ Are You sure (Yes/No) : ")
                             if sure.lower() != "yes":
@@ -1036,10 +1028,10 @@ def user_menu(uname):
                             user_cur.execute("Delete from given_salary where w_id='%s' and month = '%s' and year = '%s'" %
                             (wid,months[month],year))
                             user_x.commit()
-                            print("\n+------------------------------------------+")
-                            print("|       ✓ SALARY HISTORY DELETED           |")
-                            print("+------------------------------------------+")
+                            loading_bar("Removing selected record...",0.015,46)
+                            print(" ✓ Salary history deleted successfully")
                         elif choice == "6":  # Back
+                            print("\n↩ Returning to the previous menu...")
                             break
                         else:
                             print("\n⚠ Invalid choice.")
