@@ -24,6 +24,19 @@ months={"01":"January","02":"February","03":"March","04":"April","05":"May","06"
         "08":"August","09":"September","10":"October","11":"November","12":"December"}
 max_days={"January":31,"February":28,"March":31,"April":30,"May":31,"June":30,"July":31,"August":31,"September":30,
         "October":31,"November":30,"December":31}
+def exit():
+    print("\n\t\t\t\t\t+------------------------------------------+")
+    print("\t\t\t\t\t|          ENTREPRENEUR ASSISTANT          |")
+    print("\t\t\t\t\t+------------------------------------------+")
+    print("\n\t\t\t\t\t                THANK YOU!")
+    print("\t\t\t\t\t     Thank you for using our application.")
+    a = "Shutting down the application..."
+    print("\n\t\t\t\t\t\t",end="")
+    for i in a:
+        time.sleep(0.1)
+        print(i,end="")
+    print("\n\n\t\t\t\t\t\t  Have a productive day!")
+    sys.exit()
 def loading_bar(text,delay,space):
     print("\n")
     print("                                                   ⚙ PLEASE WAIT...")
@@ -1041,21 +1054,22 @@ def user_menu(uname):
                     print("|           📦 PRODUCT MANAGEMENT          |")
                     print("+------------------------------------------+")
                     while True:
-                        print("\n+------------------------------------------+")
-                        print("|  Press 1 ---> View Products              |")
-                        print("|  Press 2 ---> Add Product                |")
-                        print("|  Press 3 ---> Update Product             |")
-                        print("|  Press 4 ---> Delete Product             |")
-                        print("|  Press 5 ---> Out Of Stock               |")
-                        print("|  Press 6 ---> Back                       |")
+                        print("  Press 1 ---> 📋 View Products")
+                        print("  Press 2 ---> ➕ Add Product")
+                        print("  Press 3 ---> ✏️ Update Product")
+                        print("  Press 4 ---> 🗑  Delete Product")
+                        print("  Press 5 ---> ⚠️ Out Of Stock")
+                        print("  Press 6 ---> ↩ Back\n")
                         print("+------------------------------------------+")
-                        choice = input("\n➤ Enter your choice : ")
+                        choice = input("➤ Please select an option to continue: ")
                         if choice == "1":
                             user_cur.execute("Select * from products")
                             data = user_cur.fetchall()
                             if len(data) == 0:
                                 print("\n⚠ No Products Found")
                                 continue
+                            loading_bar("Fetching records...",0.01,51)
+                            print("\n✓ Product records retrieved successfully!")
                             print("\n+------------------------------------------+")
                             print("|              📦 PRODUCT LIST             |")
                             print("+------------------------------------------+")
@@ -1080,9 +1094,8 @@ def user_menu(uname):
                             user_cur.execute("Insert into products values('%s','%s','%s','%s')" %
                             (pid,name,price,stock))
                             user_x.commit()
-                            print("\n+---------------------------------------------+")
-                            print("|           ✓ PRODUCT ADDED SUCCESSFULLY      |")
-                            print("+---------------------------------------------+")
+                            loading_bar("Saving new details...",0.015,50)
+                            print("\n✓ Product added successfully!")
                         elif choice == "3":
                             print("\n+------------------------------------------+")
                             print("|             ✏️ UPDATE PRODUCT            |")
@@ -1113,7 +1126,8 @@ def user_menu(uname):
                             user_cur.execute("Update products set p_name='%s',price='%s',stock='%s' where p_id='%s'" %
                             (pname,price,stock,pid))
                             user_x.commit()
-                            print("\n✓ Product Updated Successfully")
+                            loading_bar("Saving modifications...",0.015,49)
+                            print("\n✓ Product details Updated Successfully")
                         elif choice == "4":
                             print("\n+--------------------------------------------+")
                             print("|             🗑️ DELETE PRODUCT            |")
@@ -1128,9 +1142,8 @@ def user_menu(uname):
                             if sure.lower() == "yes":
                                 user_cur.execute("Delete from Products where p_id='%s'" % (pid,))
                                 user_x.commit()
-                                print("\n+-----------------------------------------------+")
-                                print("|       ✓ PRODUCT DELETED SUCCESSFULLY          |")
-                                print("+-----------------------------------------------+")
+                                loading_bar("Removing selected record...",0.015,46)
+                                print(" ✓ Product details deleted successfully")
                                 update_uid(user_cur,user_x,"Products","P_ID","P",pid)
                             else:
                                 print("\n↩ Deletion Cancelled")
@@ -1140,6 +1153,8 @@ def user_menu(uname):
                             if len(data) == 0:
                                 print("\n✓ All Products are In Stock")
                             else:
+                                loading_bar("Fetching records...",0.01,51)
+                                print("\n✓ Product records retrieved successfully!")
                                 print("\n+------------------------------------------+")
                                 print("|          ⚠ OUT OF STOCK PRODUCTS        |")
                                 print("+------------------------------------------+")
@@ -1155,25 +1170,29 @@ def user_menu(uname):
                     print("|              💰 SALES MANAGEMENT         |")
                     print("+------------------------------------------+")
                     while True:
-                        print("\n+------------------------------------------+")
-                        print("|  Press 1 ---> View Sales                 |")
-                        print("|  Press 2 ---> Add Sale                   |")
-                        print("|  Press 3 ---> Delete Sale                |")
-                        print("|  Press 4 ---> Back                       |")
+                        print("  Press 1 ----> 📋 View Sales              ")
+                        print("  Press 2 ----> ➕ Add Sale                ")
+                        print("  Press 3 ----> 🗑 Delete Sale             ")
+                        print("  Press 4 ----> ↩️ Back                    ")
                         print("+------------------------------------------+")
-                        choice = input("\n➤ Enter your choice : ")
+                        choice = input("➤ Please select an option to continue: ")
                         if choice == "1":
                             user_cur.execute("Select * from Sales")
                             data = user_cur.fetchall()
                             if len(data) == 0:
                                 print("\n⚠ No Sales Found")
                             else:
+                                loading_bar("Fetching records...",0.01,51)
+                                print("\n✓ Sales records retrieved successfully!")
                                 print("\n+------------------------------------------+")
                                 print("|               📋 SALES DETAILS           |")
                                 print("+------------------------------------------+")
                                 print(tabulate(data,headers=["Sales ID","Product ID","Quantity","Price","Total Amount","Sale Date"],
                                 tablefmt="grid"))
                         elif choice == "2":
+                            print("\n+---------------------------------------+")
+                            print("|              ✚ ADD SALE              |")
+                            print("+---------------------------------------+")
                             sid = add_uid("S","S_ID","Sales",user_cur,False)
                             pid = input("\n➤ Enter Product ID : ")
                             user_cur.execute("Select * from Products where p_id='%s'"%(pid,))
@@ -1202,10 +1221,12 @@ def user_menu(uname):
                             total_amount,sale_date))
                             user_cur.execute("Update Products set stock=stock-%s where p_id='%s'"%(quantity,pid))
                             user_x.commit()
-                            print("\n+---------------------------------------------+")
-                            print("|           ✓ SALE ADDED SUCCESSFULLY         |")
-                            print("+---------------------------------------------+")
+                            loading_bar("Saving new details...",0.015,50)
+                            print("\n✓ Sale details added successfully!")
                         elif choice == "3":
+                            print("\n+-----------------------------------------+")
+                            print("|             🗑️ DELETE SALE            |")
+                            print("+-----------------------------------------+")
                             sid = input("\n➤ Enter Sale ID : ")
                             user_cur.execute("Select * from Sales where s_id='%s'"%(sid,))
                             data = user_cur.fetchall()
@@ -1218,9 +1239,8 @@ def user_menu(uname):
                                 continue
                             user_cur.execute("Delete from Sales where s_id='%s'"%(sid,))
                             user_x.commit()
-                            print("\n+--------------------------------------------+")
-                            print("|       ✓ SALE DELETED SUCCESSFULLY          |")
-                            print("+--------------------------------------------+")
+                            loading_bar("Removing selected record...",0.015,46)
+                            print(" ✓ Sale details deleted successfully")
                             update_uid(user_cur,user_x,"Sales","S_id","S",sid)
                         elif choice == "4":
                             print("\n↩️  Returning to the previous menu...")
@@ -1233,13 +1253,13 @@ def user_menu(uname):
                         print("\n+------------------------------------------+")
                         print("|              📊 SALES REPORT             |")
                         print("+------------------------------------------+")
-                        print("|  Press 1 ----> 📅 Daily Sales Report     |")
-                        print("|  Press 2 ----> 📆 Monthly Sales Report   |")
-                        print("|  Press 3 ----> 📈 Monthly Sales Summary  |")
-                        print("|  Press 4 ----> 📊 Yearly Sales Summary   |")
-                        print("|  Press 5 ----> ↩ Back                   |")
+                        print("  Press 1 ----> 📅 Daily Sales Report     ")
+                        print("  Press 2 ----> 📆 Monthly Sales Report   ")
+                        print("  Press 3 ----> 📈 Monthly Sales Summary  ")
+                        print("  Press 4 ----> 📊 Yearly Sales Summary   ")
+                        print("  Press 5 ----> ↩ Back                   ")
                         print("+------------------------------------------+")
-                        choice = input("\n➤ Enter your choice : ")
+                        choice = input("➤ Please select an option to continue: ")
                         if choice == "1":
                             date = input("\n➤ Enter date (YYYY-MM-DD) : ")
                             try:
@@ -1256,6 +1276,7 @@ def user_menu(uname):
                             total_income = 0
                             for row in data:
                                 total_income += row[2]
+                            loading_bar("Analyzing Sales Performance...",0.03,45)
                             print("\n+------------------------------------------+")
                             print("|             📅 DAILY SALES REPORT        |")
                             print("+------------------------------------------+")
@@ -1282,6 +1303,7 @@ def user_menu(uname):
                             total_sales_income = 0
                             for row in data:
                                 total_sales_income += row[2]
+                            loading_bar("Analyzing Sales Performance...",0.03,45)
                             print("\n+------------------------------------------+")
                             print("|            📆 MONTHLY SALES REPORT       |")
                             print("+------------------------------------------+")
@@ -1330,6 +1352,7 @@ def user_menu(uname):
                             for row in ranking:
                                 if row[1] == ranking[0][1]:
                                     most_sold_products += row[0] + ", "
+                            loading_bar("Generating Monthly Sales Report...",0.03,43)        
                             print("\n==============================================================")
                             print("                    MONTHLY SALES SUMMARY")
                             print("==============================================================")
@@ -1391,6 +1414,7 @@ def user_menu(uname):
                             for row in ranking:
                                 if row[1] == ranking[0][1]:
                                     most_sold_products += row[0] + ", "
+                            loading_bar("Generating Yearly Sales Report...",0.03,43)
                             print("\n==============================================================")
                             print("                     YEARLY SALES SUMMARY")
                             print("==============================================================")
@@ -1472,7 +1496,7 @@ while True:
                 print("\n⚠ Invalid admin ID or password.")
                 print("  Too many unsuccessful login attempts.")
                 print("  Program exiting...")
-                sys.exit()
+                exit()
             else:
                 print("\n⚠ Invalid admin ID or password.")
                 print("  Please try again.")
@@ -1938,7 +1962,7 @@ while True:
                     print("\n🔒 Account Locked!")
                     print("  Contact Admin to regain access.")
                     print("📧 Please contact Admin at",admin_email[0],"for assistance.")
-                    sys.exit()
+                    exit()
                 while True:
                     print(" Attempt:",attempts,"of 3")
                     password = input("➤ Enter the Password: ")

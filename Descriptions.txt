@@ -26,11 +26,11 @@ Sales             ----- by program
 
 Remaining Tasks:
 For Admin
-1)Uniform design for printing menus                                         ---- 
+1)Uniform design for printing menus                                         ----
 2)Same design to be printed for adding,updating,deleting,viewing a thing    ---- 
 3)add loading() in places where it is required                              ---- 
 4)at tabulate small lettered heading                                        ----  done for user
-5)Invalid option print("\n⚠ Invalid choice.")                               ---- 
+5)Invalid option print("\n⚠ Invalid choice.")                               ---- done
                  print("  Please select an option from 1 to 7.")
 Back
  print("\n↩️  Returning to the previous menu...")
@@ -40,5 +40,8 @@ asking choice
 6)Check the arrow at the enter place                                         ---- 
 sender_password = ""
 
+Chanegs :
+1)Copy only the user menu
+2) change the sys.exit() in admin to exit() add the new func with def exit()
 
                         

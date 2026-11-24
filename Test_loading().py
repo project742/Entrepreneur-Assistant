@@ -1,4 +1,5 @@
 import time
+import sys
 def loading_bar(text,delay,space):
     print("\n")
     print("                                                   ⚙ PLEASE WAIT...")
@@ -9,4 +10,5 @@ def loading_bar(text,delay,space):
         time.sleep(delay)
     print("] 100%")
     print("\n")
-loading_bar("Analysing data...",0.015,52)
+loading_bar("Generating Yearly Sales Report...",0.03,43)
+
